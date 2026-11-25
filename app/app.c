@@ -126,7 +126,7 @@ void app_run(void)
 
             voltage_mv = adc_read_mv();
             fan_on = (voltage_mv > VOLT_THRESHOLD_MV) ? 1u : 0u;
-            beep_enable = fan_on;
+            beep_set_enable(fan_on);
 
             fan_set(fan_on);
         }

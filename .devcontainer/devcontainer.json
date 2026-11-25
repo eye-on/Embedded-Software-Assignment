@@ -1,35 +1,32 @@
 {
-  "name": "STM32F407 Dev (arm-gcc 13.2 + openocd)",
-
+  "name": "STM32F407 Dev",
   "build": {
     "dockerfile": "../Dockerfile",
     "context": ".."
   },
-
   "workspaceMount": "source=${localWorkspaceFolder},target=/work,type=bind",
   "workspaceFolder": "/work",
-
   "runArgs": [
     "--privileged"
   ],
-
   "mounts": [
     "source=/dev/bus/usb,target=/dev/bus/usb,type=bind"
   ],
-
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-vscode.cpptools",
+        "llvm-vs-code-extensions.vscode-clangd",
         "marus25.cortex-debug",
         "ms-vscode.makefile-tools"
       ],
       "settings": {
-        "C_Cpp.default.compilerPath": "/usr/bin/arm-none-eabi-gcc",
-        "C_Cpp.default.cStandard": "gnu11",
-        "C_Cpp.default.intelliSenseMode": "gcc-arm",
-        "C_Cpp.default.includePath": [
-          "${workspaceFolder}"
+        "C_Cpp.intelliSenseEngine": "disabled",
+        "clangd.path": "/usr/bin/clangd",
+        "clangd.arguments": [
+          "--compile-commands-dir=/work",
+          "--query-driver=/usr/bin/arm-none-eabi-gcc",
+          "--background-index",
+          "--header-insertion=never"
         ],
         "files.associations": {
           "*.ld": "plaintext",
@@ -38,8 +35,6 @@
       }
     }
   },
-
-  "postCreateCommand": "arm-none-eabi-gcc --version | head -1 && openocd --version 2>&1 | head -1",
-
+  "postCreateCommand": "bash tools/gen_compdb.sh && arm-none-eabi-gcc --version | head -1",
   "remoteUser": "root"
 }
